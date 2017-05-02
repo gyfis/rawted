@@ -92,6 +92,22 @@ def _node_list_distance(dist_table, list1, list2):
     return dist
 
 
+def _save_structure(total_rotran, smoothing_rotran, save_args: dict):
+    pdb_structure_1 = save_args['structure1']
+    chain_1 = save_args['chain1']
+    filename_1 = save_args['filename1']
+
+    pdb_structure_2 = save_args['structure2']
+    chain_2 = save_args['chain2']
+    filename_2 = save_args['filename2']
+
+    save_structure(pdb_structure_1, chain_1, filename_1)
+
+    pdb_structure_2[0][chain_2].transform(total_rotran[0], total_rotran[1])
+    pdb_structure_2[0][chain_2].transform(smoothing_rotran[0], smoothing_rotran[1])
+    save_structure(pdb_structure_2, chain_2, filename_2)
+
+
 def method_a(structure_1_coordinates, structure_2_coordinates, rna_tree_1, rna_tree_2, dist, save_args=None):
     herpins_1 = rna_tree_1.apply_subtree_predicate(herpin_init_predicate, herpin_result_predicate)
     herpins_2 = rna_tree_2.apply_subtree_predicate(herpin_init_predicate, herpin_result_predicate)
@@ -138,13 +154,7 @@ def method_a(structure_1_coordinates, structure_2_coordinates, rna_tree_1, rna_t
     rms, psi, smoothing_rotran = calculate_rms_with_rotran(structure_1_coordinates, structure_2_coordinates, rotran)
 
     if save_args:
-        pdb_structure = save_args['structure2']
-        chain = save_args['chain2']
-        filename = save_args['filename']
-
-        pdb_structure[0][chain].transform(rotran[0], rotran[1])
-        pdb_structure[0][chain].transform(smoothing_rotran[0], smoothing_rotran[1])
-        save_structure(pdb_structure, chain, filename)
+        _save_structure(rotran, smoothing_rotran, save_args)
 
     return rms, psi, rotran[0], rotran[1]
 
@@ -208,13 +218,7 @@ def method_b(structure_1_coordinates, structure_2_coordinates, rna_tree_1, rna_t
         total_rms, total_psi, total_rotran, total_smoothing_rotran = new_total_rms, new_total_psi, rotran, new_smoothing_rotran
 
     if save_args:
-        pdb_structure = save_args['structure2']
-        chain = save_args['chain2']
-        filename = save_args['filename']
-
-        pdb_structure[0][chain].transform(total_rotran[0], total_rotran[1])
-        pdb_structure[0][chain].transform(total_smoothing_rotran[0], total_smoothing_rotran[1])
-        save_structure(pdb_structure, chain, filename)
+        _save_structure(total_rotran, total_smoothing_rotran, save_args)
 
     return total_rms, total_psi, total_rotran[0], total_rotran[1]
 
@@ -360,13 +364,7 @@ def method_c(structure_1_coordinates, structure_2_coordinates, rna_tree_1, rna_t
     # apply total_rotran and final_smoothing_rotran to pdb_2_structure
 
     if save_args:
-        pdb_structure = save_args['structure2']
-        chain = save_args['chain2']
-        filename = save_args['filename']
-
-        pdb_structure[0][chain].transform(total_rotran[0], total_rotran[1])
-        pdb_structure[0][chain].transform(total_smoothing_rotran[0], total_smoothing_rotran[1])
-        save_structure(pdb_structure, chain, filename)
+        _save_structure(total_rotran, total_smoothing_rotran, save_args)
 
     return total_rms, total_psi, total_rotran[0], total_rotran[1]
 
@@ -383,6 +381,7 @@ def method_d(structure_1_coordinates, structure_2_coordinates, rna_tree_1, rna_t
         if save_args:
             save_args['structure1'], save_args['structure2'] = save_args['structure2'], save_args['structure1']
             save_args['chain1'], save_args['chain2'] = save_args['chain2'], save_args['chain1']
+            save_args['filename1'], save_args['filename2'] = save_args['filename2'], save_args['filename1']
 
     longest_path_2_len = len(longest_paths_2[0])
     len_diff = len(longest_paths_1[0]) - longest_path_2_len
@@ -442,13 +441,7 @@ def method_d(structure_1_coordinates, structure_2_coordinates, rna_tree_1, rna_t
             total_rms, total_psi, total_rotran, final_smoothing_rotran = new_total_rms, new_total_psi, rotran, smoothing_rotran
 
     if save_args:
-        pdb_structure = save_args['structure2']
-        chain = save_args['chain2']
-        filename = save_args['filename']
-
-        pdb_structure[0][chain].transform(total_rotran[0], total_rotran[1])
-        pdb_structure[0][chain].transform(final_smoothing_rotran[0], final_smoothing_rotran[1])
-        save_structure(pdb_structure, chain, filename)
+        _save_structure(total_rotran, final_smoothing_rotran, save_args)
 
     return total_rms, total_psi, total_rotran[0], total_rotran[1]
 
@@ -524,13 +517,7 @@ def method_e(structure_1_coordinates, structure_2_coordinates, rna_tree_1, rna_t
                 current_aligned_widths_2.remove(node2)
 
     if save_args:
-        pdb_structure = save_args['structure2']
-        chain = save_args['chain2']
-        filename = save_args['filename']
-
-        pdb_structure[0][chain].transform(final_total_rotran[0], final_total_rotran[1])
-        pdb_structure[0][chain].transform(final_smoothing_rotran[0], final_smoothing_rotran[1])
-        save_structure(pdb_structure, chain, filename)
+        _save_structure(final_total_rotran, final_smoothing_rotran, save_args)
 
     return final_total_rms, final_total_psi, final_total_rotran[0], final_total_rotran[1]
 
@@ -658,13 +645,7 @@ def method_f(structure_1_coordinates, structure_2_coordinates, rna_tree_1, rna_t
     final_total_rotran, final_total_rms, final_total_psi, final_smoothing_rotran = max(all_total_data, key=lambda t: t[2])
 
     if save_args:
-        pdb_structure = save_args['structure2']
-        chain = save_args['chain2']
-        filename = save_args['filename']
-
-        pdb_structure[0][chain].transform(final_total_rotran[0], final_total_rotran[1])
-        pdb_structure[0][chain].transform(final_smoothing_rotran[0], final_smoothing_rotran[1])
-        save_structure(pdb_structure, chain, filename)
+        _save_structure(final_total_rotran, final_smoothing_rotran, save_args)
 
     return final_total_rms, final_total_psi, final_total_rotran[0], final_total_rotran[1]
 
@@ -851,13 +832,7 @@ def method_g(structure_1_coordinates, structure_2_coordinates, rna_tree_1, rna_t
     final_total_rotran, final_total_rms, final_total_psi, final_smoothing_rotran = max(all_total_data, key=lambda t: t[2])
 
     if save_args:
-        pdb_structure = save_args['structure2']
-        chain = save_args['chain2']
-        filename = save_args['filename']
-
-        pdb_structure[0][chain].transform(final_total_rotran[0], final_total_rotran[1])
-        pdb_structure[0][chain].transform(final_smoothing_rotran[0], final_smoothing_rotran[1])
-        save_structure(pdb_structure, chain, filename)
+        _save_structure(final_total_rotran, final_smoothing_rotran, save_args)
 
     return final_total_rms, final_total_psi, final_total_rotran[0], final_total_rotran[1]
 
@@ -1076,13 +1051,7 @@ def method_h(structure_1_coordinates, structure_2_coordinates, rna_tree_1, rna_t
     final_total_rotran, final_total_rms, final_total_psi, final_smoothing_rotran = max(all_total_data, key=lambda t: t[2])
 
     if save_args:
-        pdb_structure = save_args['structure2']
-        chain = save_args['chain2']
-        filename = save_args['filename']
-
-        pdb_structure[0][chain].transform(final_total_rotran[0], final_total_rotran[1])
-        pdb_structure[0][chain].transform(final_smoothing_rotran[0], final_smoothing_rotran[1])
-        save_structure(pdb_structure, chain, filename)
+        _save_structure(final_total_rotran, final_smoothing_rotran, save_args)
 
     return final_total_rms, final_total_psi, final_total_rotran[0], final_total_rotran[1]
 
@@ -1352,13 +1321,7 @@ def method_i(structure_1_coordinates, structure_2_coordinates, rna_tree_1, rna_t
     final_total_rotran, final_total_rms, final_total_psi, final_smoothing_rotran = max(all_total_data, key=lambda t: t[2])
 
     if save_args:
-        pdb_structure = save_args['structure2']
-        chain = save_args['chain2']
-        filename = save_args['filename']
-
-        pdb_structure[0][chain].transform(final_total_rotran[0], final_total_rotran[1])
-        pdb_structure[0][chain].transform(final_smoothing_rotran[0], final_smoothing_rotran[1])
-        save_structure(pdb_structure, chain, filename)
+        _save_structure(final_total_rotran, final_smoothing_rotran, save_args)
 
     return final_total_rms, final_total_psi, final_total_rotran[0], final_total_rotran[1]
 
@@ -1593,12 +1556,6 @@ def method_j(structure_1_coordinates, structure_2_coordinates, rna_tree_1, rna_t
     final_total_rotran, final_total_rms, final_total_psi, final_smoothing_rotran = max(all_total_data, key=lambda t: t[2])
 
     if save_args:
-        pdb_structure = save_args['structure2']
-        chain = save_args['chain2']
-        filename = save_args['filename']
-
-        pdb_structure[0][chain].transform(final_total_rotran[0], final_total_rotran[1])
-        pdb_structure[0][chain].transform(final_smoothing_rotran[0], final_smoothing_rotran[1])
-        save_structure(pdb_structure, chain, filename)
+        _save_structure(final_total_rotran, final_smoothing_rotran, save_args)
 
     return final_total_rms, final_total_psi, final_total_rotran[0], final_total_rotran[1]

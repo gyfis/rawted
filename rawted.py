@@ -82,8 +82,8 @@ def run_rawted(args):
             save_args = None
             if save_folder:
                 save_args = {
-                    'structure1': load_pdb_structure(structure_file1),
-                    'structure2': load_pdb_structure(structure_file2),
+                    'structure1': pdb_structure1.copy(),
+                    'structure2': pdb_structure2.copy(),
                     'chain1': chain1,
                     'chain2': chain2,
                     'filename1': '{}/{}_{}_s1.pdb'.format(save_folder, tree_descriptor.replace(',', '-'), method.lower()),

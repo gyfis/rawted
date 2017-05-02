@@ -4,7 +4,7 @@ This repository holds a source code for the Rna Alignment With Tree Edit Distanc
 ## How to use
 Usage is very simple.
 1. Download source code
-2. Download DSSR tool (x3dna-dssr binary) from https://x3dna.org , and put into bin/ folder at the root of the project
+2. Download DSSR tool (x3dna-dssr binary) from https://x3dna.org , and put into `bin/` folder at the root of the project
 3. Run `python3 rawted.py [args]`
 
 ## Arguments of the program

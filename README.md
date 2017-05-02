@@ -30,4 +30,4 @@ There are 10 methods usable with the RAWTED, identified by the alphabet letters 
 
 `python3 rawted.py structure1.pdb structure2.pdb --trees v1 v2 v2,10,0,0 v2,10,1,1,100 --methods A B D E H I J`
 
-`python3 rawted.py structure1.pdb A structure2.pdb C --t v2,10,0,0 -m A B D -s`
+`python3 rawted.py structure1.pdb A structure2.pdb C --t v2,10,0,0 -m A B D -s out_dir`

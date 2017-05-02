@@ -23,8 +23,10 @@ The default tree variant is `v1`, the default method is `J`
 There are two major version of trees, `v1` and `v2`, with `v2` using three or four optional numeric arguments for weights and penalty
 
 ### Methods
-There are 10 methods usable with the RAWTED, identified by the alphabet letters A to J
+There are 10 methods usable with the RAWTED, identified by the alphabet letters `A` to `J`
 
 ## Call examples
+
 `python3 rawted.py structure1.pdb structure2.pdb --trees v1 v2 v2,10,0,0 v2,10,1,1,100 --methods A B D E H I J`
+
 `python3 rawted.py structure1.pdb A structure2.pdb C --t v2,10,0,0 -m A B D -s`

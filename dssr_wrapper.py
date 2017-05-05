@@ -39,7 +39,7 @@ def _prepare_args_dssr(filename: str, output_filename: str = None) -> tuple:
 
 
 def _load_input_file(input_file: str) -> Dict:
-    output_file = absolute_dssr_path(input_file)
+    output_file = absolute_dssr_path()
     _run_dssr(_prepare_args_dssr(input_file, output_filename=output_file))
     return json.load(open(output_file))
 
@@ -78,9 +78,9 @@ def _remove_pseudoknots(dbn: str) -> Tuple[str, Dict]:
     return knots_removed, knot_pairs
 
 
-def absolute_dssr_path(input_file: str) -> str:
+def absolute_dssr_path() -> str:
     check_or_create_absolute_dir(_dssr_output_dir)
-    return absolute_path(_dssr_output_dir, input_file.split('/')[-1], '_', 'output.pdb.json')
+    return absolute_path(_dssr_output_dir, 'output.pdb.json')
 
 
 class DSSRWrapper:

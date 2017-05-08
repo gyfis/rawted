@@ -1,4 +1,3 @@
-from predicates import herpin_init_predicate, herpin_result_predicate
 from biopython_wrapper import save_structure, calculate_rotran, calculate_rms_with_rotran
 from itertools import product, permutations
 from rna_tree import MetaRnaTree, RnaNode, _coords_from_residues, _ndarray_from_residues
@@ -92,6 +91,14 @@ def _node_list_distance(dist_table, list1, list2):
     return dist
 
 
+def _herpin_init_predicate(node):
+    return node.child_count < 2 or all(child.is_leaf for child in node.children)
+
+
+def _herpin_result_predicate(node):
+    return node.child_count == 1 or (not node.is_leaf and all(child.is_leaf for child in node.children))
+
+
 def _save_structure(total_rotran, smoothing_rotran, save_args: dict):
     pdb_structure_1 = save_args['structure1']
     chain_1 = save_args['chain1']
@@ -109,8 +116,8 @@ def _save_structure(total_rotran, smoothing_rotran, save_args: dict):
 
 
 def method_a(structure_1_coordinates, structure_2_coordinates, rna_tree_1, rna_tree_2, dist, save_args=None):
-    herpins_1 = rna_tree_1.apply_subtree_predicate(herpin_init_predicate, herpin_result_predicate)
-    herpins_2 = rna_tree_2.apply_subtree_predicate(herpin_init_predicate, herpin_result_predicate)
+    herpins_1 = rna_tree_1.apply_subtree_predicate(_herpin_init_predicate, _herpin_result_predicate)
+    herpins_2 = rna_tree_2.apply_subtree_predicate(_herpin_init_predicate, _herpin_result_predicate)
 
     closest_h1, closest_h2 = None, None
     min_dist = dist.max() + 1
@@ -224,8 +231,8 @@ def method_b(structure_1_coordinates, structure_2_coordinates, rna_tree_1, rna_t
 
 
 def method_c(structure_1_coordinates, structure_2_coordinates, rna_tree_1, rna_tree_2, dist, save_args=None, sampling_count=50):
-    herpins_1 = rna_tree_1.apply_subtree_predicate(herpin_init_predicate, herpin_result_predicate)
-    herpins_2 = rna_tree_2.apply_subtree_predicate(herpin_init_predicate, herpin_result_predicate)
+    herpins_1 = rna_tree_1.apply_subtree_predicate(_herpin_init_predicate, _herpin_result_predicate)
+    herpins_2 = rna_tree_2.apply_subtree_predicate(_herpin_init_predicate, _herpin_result_predicate)
 
     closest_h1, closest_h2 = None, None
     min_dist = dist.max() + 1
@@ -569,8 +576,8 @@ def method_f(structure_1_coordinates, structure_2_coordinates, rna_tree_1, rna_t
         widths_dist = np.delete(widths_dist, (indices[0]), axis=0)
         widths_dist = np.delete(widths_dist, (indices[1]), axis=1)
 
-    herpins_1 = rna_tree_1.apply_subtree_predicate(herpin_init_predicate, herpin_result_predicate)
-    herpins_2 = rna_tree_2.apply_subtree_predicate(herpin_init_predicate, herpin_result_predicate)
+    herpins_1 = rna_tree_1.apply_subtree_predicate(_herpin_init_predicate, _herpin_result_predicate)
+    herpins_2 = rna_tree_2.apply_subtree_predicate(_herpin_init_predicate, _herpin_result_predicate)
 
     closest_h1, closest_h2 = None, None
     min_dist = dist.max() + 1
@@ -700,8 +707,8 @@ def method_g(structure_1_coordinates, structure_2_coordinates, rna_tree_1, rna_t
         widths_dist = np.delete(widths_dist, (indices[1]), axis=1)
 
     # ---- Hairpin section
-    herpins_1 = rna_tree_1.apply_subtree_predicate(herpin_init_predicate, herpin_result_predicate)
-    herpins_2 = rna_tree_2.apply_subtree_predicate(herpin_init_predicate, herpin_result_predicate)
+    herpins_1 = rna_tree_1.apply_subtree_predicate(_herpin_init_predicate, _herpin_result_predicate)
+    herpins_2 = rna_tree_2.apply_subtree_predicate(_herpin_init_predicate, _herpin_result_predicate)
 
     closest_h1, closest_h2 = None, None
     min_dist = dist.max() + 1
@@ -885,8 +892,8 @@ def method_h(structure_1_coordinates, structure_2_coordinates, rna_tree_1, rna_t
         widths_dist = np.delete(widths_dist, (indices[1]), axis=1)
 
     # ---- Hairpin section
-    herpins_1 = rna_tree_1.apply_subtree_predicate(herpin_init_predicate, herpin_result_predicate)
-    herpins_2 = rna_tree_2.apply_subtree_predicate(herpin_init_predicate, herpin_result_predicate)
+    herpins_1 = rna_tree_1.apply_subtree_predicate(_herpin_init_predicate, _herpin_result_predicate)
+    herpins_2 = rna_tree_2.apply_subtree_predicate(_herpin_init_predicate, _herpin_result_predicate)
 
     closest_h1, closest_h2 = None, None
     min_dist = dist.max() + 1
@@ -1063,8 +1070,8 @@ def method_i(structure_1_coordinates, structure_2_coordinates, rna_tree_1, rna_t
     # combine
 
     # ---- Hairpin section
-    herpins_1 = rna_tree_1.apply_subtree_predicate(herpin_init_predicate, herpin_result_predicate)
-    herpins_2 = rna_tree_2.apply_subtree_predicate(herpin_init_predicate, herpin_result_predicate)
+    herpins_1 = rna_tree_1.apply_subtree_predicate(_herpin_init_predicate, _herpin_result_predicate)
+    herpins_2 = rna_tree_2.apply_subtree_predicate(_herpin_init_predicate, _herpin_result_predicate)
 
     closest_h1, closest_h2 = None, None
     min_dist = dist.max() + 1
@@ -1334,8 +1341,8 @@ def method_j(structure_1_coordinates, structure_2_coordinates, rna_tree_1, rna_t
     # combine
 
     # ---- Hairpin section
-    herpins_1 = rna_tree_1.apply_subtree_predicate(herpin_init_predicate, herpin_result_predicate)
-    herpins_2 = rna_tree_2.apply_subtree_predicate(herpin_init_predicate, herpin_result_predicate)
+    herpins_1 = rna_tree_1.apply_subtree_predicate(_herpin_init_predicate, _herpin_result_predicate)
+    herpins_2 = rna_tree_2.apply_subtree_predicate(_herpin_init_predicate, _herpin_result_predicate)
 
     closest_h1, closest_h2 = None, None
     min_dist = dist.max() + 1

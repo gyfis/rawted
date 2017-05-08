@@ -220,10 +220,6 @@ class RnaNode(object):
     def get_label(cls, node: 'RnaNode') -> str:
         return node.label
 
-    @classmethod
-    def dist(cls, label1: str, label2: str) -> float:
-        return label1 != label2
-
 
 class MetaRnaTree(object):
     def __init__(self, data_source, root=None):

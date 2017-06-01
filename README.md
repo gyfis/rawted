@@ -31,3 +31,11 @@ There are 10 methods usable with the RAWTED, identified by the alphabet letters 
 `python3 rawted.py structure1.pdb structure2.pdb --trees v1 v2 v2,10,0,0 v2,10,1,1,100 --methods A B D E H I J`
 
 `python3 rawted.py structure1.pdb A structure2.pdb C --t v2,10,0,0 -m A B D -s out_dir`
+
+The PDB files can be found and downloaded at the RCSB Protein Data Bank.
+
+## Known issues
+
+When using the argument `--save_folder, -s`, some structures fail to save correctly and instead throw an exception.
+This is caused by the presence of disordered atoms in the structure and the usage of BioPython.
+The issue is tracked in https://github.com/biopython/biopython/issues/455.
